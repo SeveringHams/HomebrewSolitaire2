@@ -30,13 +30,8 @@ public class KlondikeGameObject extends BaseSingleDeckGameObject {
         //add cards in triangle/staircase pattern
         for (int j = 0; j < 7; j++) {
             for (int i = 6; i >= j; i--) {
-                //System.out.print(i+" ");
                 tableau[i].setupAddCard(dealer.get(0));
                 tableau[i].getTopCard().isFaceDown=true;
-                for (int k = 0; k < tableau.length; k++) {
-                    System.out.print(tableau[k].getCardStackList().size()+" ");
-                }
-                System.out.println();
                 dealer.remove(0);
             }
 

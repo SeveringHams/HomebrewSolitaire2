@@ -37,45 +37,36 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
     public GameBoard(Context context) {
         super(context);
-        init(null, 0);
-        thread = new MainThread(getHolder(), this);
-        setFocusable(true);
-        gameObject = new KlondikeGameObject(0, context);
         getHolder().addCallback(this);
+        thread = new MainThread(getHolder(), this);
+        //setFocusable(true);
+        gameObject = new KlondikeGameObject(0, context);
     }
 
     public GameBoard(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(attrs, 0);
-        thread = new MainThread(getHolder(), this);
-        setFocusable(true);
-        gameObject = new KlondikeGameObject(0, context);
         getHolder().addCallback(this);
+        thread = new MainThread(getHolder(), this);
+        //setFocusable(true);
+        gameObject = new KlondikeGameObject(0, context);
     }
 
     public GameBoard(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(attrs, defStyle);
-        thread = new MainThread(getHolder(), this);
-        setFocusable(true);
-        gameObject = new KlondikeGameObject(0, context);
         getHolder().addCallback(this);
+        thread = new MainThread(getHolder(), this);
+        //setFocusable(true);
+        gameObject = new KlondikeGameObject(0, context);
     }
 
     public void update() {
-
-    }
-
-    private void init(AttributeSet attrs, int defStyle) {
-
-
+        gameObject.drawGame(MainThread.canvas);
+        System.out.println();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        gameObject.drawGame(canvas);
-
     }
 
     public void draw(Canvas canvas) {
