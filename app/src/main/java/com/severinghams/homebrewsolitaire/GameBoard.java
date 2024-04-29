@@ -12,6 +12,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 
 import androidx.annotation.NonNull;
 
@@ -28,13 +31,10 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
     int paddingTop = getPaddingTop();
     int paddingRight = getPaddingRight();
     int paddingBottom = getPaddingBottom();
-
     int contentWidth = getWidth() - paddingLeft - paddingRight;
     int contentHeight = getHeight() - paddingTop - paddingBottom;
-
     BaseSingleDeckGameObject gameObject;
     private final MainThread thread;
-
     public GameBoard(Context context) {
         super(context);
         init(null, 0);
@@ -42,6 +42,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
         setFocusable(true);
         gameObject = new KlondikeGameObject(0, context);
         getHolder().addCallback(this);
+        this.requestFocusFromTouch();
     }
 
     public GameBoard(Context context, AttributeSet attrs) {
@@ -51,6 +52,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
         setFocusable(true);
         gameObject = new KlondikeGameObject(0, context);
         getHolder().addCallback(this);
+        this.requestFocusFromTouch();
     }
 
     public GameBoard(Context context, AttributeSet attrs, int defStyle) {
@@ -60,6 +62,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
         setFocusable(true);
         gameObject = new KlondikeGameObject(0, context);
         getHolder().addCallback(this);
+        this.requestFocusFromTouch();
     }
 
     public void update() {
@@ -67,8 +70,27 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void init(AttributeSet attrs, int defStyle) {
+        this.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+        );
 
+    }
 
+    public boolean onTouchEvent(MotionEvent motion) {
+        System.out.println(motion.getX()+" "+motion.getY()+" "+motion.getX());
+        performClick();
+        gameObject.doTouchEvent(motion);
+        return true;
+    }
+
+    public boolean performClick() {
+        super.performClick();
+        return true;
     }
 
     @Override

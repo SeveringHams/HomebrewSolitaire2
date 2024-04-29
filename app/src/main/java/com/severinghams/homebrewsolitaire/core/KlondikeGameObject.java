@@ -12,20 +12,58 @@ import com.severinghams.homebrewsolitaire.core.enums.EnumStackingSuit;
 public class KlondikeGameObject extends BaseSingleDeckGameObject {
     public CardStackObject[] tableau = new CardStackObject[7];
     public CardStackObject[] foundation = new CardStackObject[4];
-    public CardStackObject stock = new CardStackObject(0,1, EnumStackType.StockStack, false);
-    public CardStackObject waste = new CardStackObject(1,1, EnumStackType.SpreadStackH, EnumRank.RankA, EnumStackingRank.AceToKing, EnumStackingSuit.SameSuit, false, false, false, true);
+    public CardStackObject stock = new CardStackObject(
+            0,
+            0,
+            EnumStackType.StockStack,
+            false,
+            this.emptySpotDrawable
+    );
+    public CardStackObject waste = new CardStackObject(
+            1,
+            0,
+            EnumStackType.SpreadStackH,
+            EnumRank.RankA,
+            EnumStackingRank.AceToKing,
+            EnumStackingSuit.SameSuit,
+            false,
+            false,
+            false,
+            true,
+            this.emptySpotDrawable);
 
 
     public KlondikeGameObject(long seed, Context context) {
         super(seed, context);
         //create tableau
         for (int i = 0; i < tableau.length; i++) {
-            tableau[i] = new CardStackObject(i, 1, EnumStackType.SpreadStackV, EnumRank.RankK, EnumStackingRank.KingToAce, EnumStackingSuit.AltColours, false, true, true, true);
-            System.out.println(tableau[i].getPos()[0]+" "+tableau[i].getPos()[1]);
+            tableau[i] = new CardStackObject(
+                    i+0,
+                    1,
+                    EnumStackType.SpreadStackV,
+                    EnumRank.RankK,
+                    EnumStackingRank.KingToAce,
+                    EnumStackingSuit.AltColours,
+                    false,
+                    true,
+                    true,
+                    true,
+                    this.emptySpotDrawable);
         }
         //create foundation
         for (int i = 0; i < 4; i++) {
-            foundation[i] = new CardStackObject(i+3, 0, EnumStackType.SpreadStackV, EnumRank.RankA, EnumStackingRank.AceToKing, EnumStackingSuit.SameSuit, false, true, true, true);
+            foundation[i] = new CardStackObject(
+                    i+3,
+                    0,
+                    EnumStackType.StraightStack,
+                    EnumRank.RankA,
+                    EnumStackingRank.AceToKing,
+                    EnumStackingSuit.SameSuit,
+                    false,
+                    true,
+                    true,
+                    true,
+                    this.emptySpotDrawable);
         }
         //add cards in triangle/staircase pattern
         for (int j = 0; j < 7; j++) {
@@ -51,22 +89,25 @@ public class KlondikeGameObject extends BaseSingleDeckGameObject {
     private void drawTableau(Canvas canvas) {
         for (int i = 0; i < tableau.length; i++) {
             tableau[i].updateStack();
-            tableau[i].drawStack(canvas);
+            tableau[i].drawStackTop(canvas);
         }
     }
     private void drawFoundation(Canvas canvas) {
         for (int i = 0; i < foundation.length; i++) {
             foundation[i].updateStack();
-            foundation[i].drawStack(canvas);
+            foundation[i].drawStackTop(canvas);
         }
     }
     private void drawStockAndWaste(Canvas canvas) {
         stock.updateStack();
+        stock.drawStackTop(canvas);
         waste.updateStack();
+        waste.drawStackTop(canvas);
     }
     public void drawGame(Canvas canvas) {
-        //drawFoundation(canvas);
+        super.drawGame(canvas);
+        drawFoundation(canvas);
         drawTableau(canvas);
-        //drawStockAndWaste(canvas);
+        drawStockAndWaste(canvas);
     }
 }

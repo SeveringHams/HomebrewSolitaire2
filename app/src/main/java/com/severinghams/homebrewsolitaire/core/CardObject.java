@@ -1,17 +1,13 @@
 package com.severinghams.homebrewsolitaire.core;
 
 
-import android.annotation.SuppressLint;
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import com.severinghams.homebrewsolitaire.R;
+
 import com.severinghams.homebrewsolitaire.core.enums.EnumColour;
 import com.severinghams.homebrewsolitaire.core.enums.EnumRank;
 import com.severinghams.homebrewsolitaire.core.enums.EnumSuit;
-
-import java.util.ResourceBundle;
 
 public class CardObject {
     public boolean isFaceDown = false;
@@ -32,15 +28,35 @@ public class CardObject {
         drawableBack = drawBack;
     }
 
-    public void drawCard(Canvas canvas) {
+    public void drawCardTop(Canvas canvas) {
         int[] pos = {horizontalPos,verticalPos};
-        int[] canSize = {canvas.getWidth()/21, canvas.getHeight()/17/3, (canvas.getWidth()/70), canvas.getHeight()/17};
+        double[] canSize = {canvas.getWidth()/21.0, canvas.getWidth()/63.0, canvas.getWidth()/90.0, canvas.getWidth()/8.0};
         //System.out.println(horizontalPos+" "+verticalPos);
         Rect rectangle = new Rect(
-                pos[0]*canSize[0]+canSize[2],
-                pos[1]*canSize[1]+canSize[2],
-                (pos[0]+3)*canSize[0]-canSize[2],
-                (pos[1]+3)*canSize[1]+canSize[3]+canSize[2]);
+                (int)(pos[0]*canSize[0]+canSize[2]),
+                (int)(pos[1]*canSize[1]+canSize[2]),
+                (int)((pos[0]+3)*canSize[0]-canSize[2]),
+                (int)((pos[1]+3)*canSize[1]+canSize[3]));
+
+        if (isFaceDown) {
+            drawableBack.setBounds(rectangle);
+            drawableBack.draw(canvas);
+        } else {
+            drawable.setBounds(rectangle);
+            drawable.draw(canvas);
+        }
+    }
+
+
+    public void drawCardBottom(Canvas canvas) {
+        int[] pos = {horizontalPos,verticalPos};
+        double[] canSize = {canvas.getWidth()/21.0, canvas.getWidth()/63.0, canvas.getWidth()/90.0, canvas.getWidth()/8.0};
+        //System.out.println(horizontalPos+" "+verticalPos);
+        Rect rectangle = new Rect(
+                (int)(pos[0]*canSize[0]+canSize[2]),
+                (int)(canvas.getHeight()-((pos[1]+3)*canSize[1]+canSize[3])),
+                (int)((pos[0]+3)*canSize[0]-canSize[2]),
+                (int)(canvas.getHeight()-(pos[1]*canSize[1]+canSize[2])));
 
         if (isFaceDown) {
             drawableBack.setBounds(rectangle);
