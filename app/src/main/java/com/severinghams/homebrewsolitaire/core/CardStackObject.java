@@ -2,6 +2,8 @@ package com.severinghams.homebrewsolitaire.core;
 
 
 import android.graphics.Canvas;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 
 import com.severinghams.homebrewsolitaire.core.enums.EnumRank;
 import com.severinghams.homebrewsolitaire.core.enums.EnumStackType;
@@ -25,9 +27,12 @@ public class CardStackObject {
     public final ArrayList<CardObject> cardStackList = new ArrayList<>(1);
     private final int positionH;
     private final int positionV;
+    private int emptyPosH;
+    private int emptyPosV;
+    private final Drawable emptyStack;
 
-    // specify position, base rank, rank pattern, suit stacking, and rank rollover. use this to create a tableau stack, waste stack, stock, or foundation stack.
-    public CardStackObject (int posH, int posV, EnumStackType stackType, EnumRank baseRank, EnumStackingRank rankStacking, EnumStackingSuit suitStacking, boolean rankRollover, boolean canFillEmpty, boolean canStack, boolean canRemoveFromStack) {
+    // specify position, base rank, rank pattern, suit stacking, and rank rollover. use this to create a tableau stack, waste stack, or foundation stack.
+    public CardStackObject (int posH, int posV, EnumStackType stackType, EnumRank baseRank, EnumStackingRank rankStacking, EnumStackingSuit suitStacking, boolean rankRollover, boolean canFillEmpty, boolean canStack, boolean canRemoveFromStack, Drawable emptyStack) {
         //Position
         positionH = posH;
         positionV = posV;
@@ -43,9 +48,12 @@ public class CardStackObject {
         this.canStack = canStack;
         this.singleCardOnly = false;
         this.canRemoveFromStack = canRemoveFromStack;
+        this.emptyStack = emptyStack;
+        init();
         updateStack();
     }
-    public CardStackObject (int posH, int posV, EnumStackType stackType, boolean canRemoveFromStack) {
+    // use for stock
+    public CardStackObject (int posH, int posV, EnumStackType stackType, boolean canRemoveFromStack, Drawable emptyStack) {
         //Position
         positionH = posH;
         positionV = posV;
@@ -61,10 +69,12 @@ public class CardStackObject {
         this.canStack = false;
         this.singleCardOnly = false;
         this.canRemoveFromStack = canRemoveFromStack;
+        this.emptyStack = emptyStack;
+        init();
         updateStack();
     }
     // specify position. use for reserve slots.
-    public CardStackObject (int posH, int posV) {
+    public CardStackObject (int posH, int posV, Drawable emptyStack) {
         positionH = posH;
         positionV = posV;
         this.baseRank = null;
@@ -78,7 +88,31 @@ public class CardStackObject {
         this.canStack = true;
         this.singleCardOnly = true;
         this.canRemoveFromStack = true;
-        this.updateStack();
+        this.emptyStack = emptyStack;
+        init();
+        updateStack();
+    }
+    private void init() {
+        if (stackType.equals(EnumStackType.StockStack)) {
+            for (int i = 0; i < cardStackList.size(); i++) {
+                cardStackList.get(i).isFaceDown = true;
+            }
+        }
+        switch (stackType) {
+            case StockStack:
+            case SpreadStackH:
+            case StraightStack:
+                emptyPosH = positionH*3;
+                emptyPosV = positionV*3;
+                break;
+            case SpreadStackV:
+                emptyPosH = positionH*3;
+                emptyPosV = positionV*12;
+                break;
+            default:
+                System.err.println("ERROR: init() has defaulted! You so stupid!");
+                break;
+        }
     }
     public CardObject getTopCard() {
         if (cardStackList.isEmpty()) {
@@ -168,7 +202,10 @@ public class CardStackObject {
         return null;
     }
     public void updateStack() {
-        if (getTopCard()!=null && !stackType.equals(EnumStackType.StockStack)) {
+        if (getTopCard()==null) {
+            return;
+        }
+        if (!stackType.equals(EnumStackType.StockStack)) {
             getTopCard().isFaceDown = false;
         }
         if (stackType.equals(EnumStackType.StockStack)) {
@@ -186,32 +223,115 @@ public class CardStackObject {
                 break;
             case SpreadStackV:
                 for (int i = 0; i < cardStackList.size(); i++) {
-                    cardStackList.get(i).verticalPos = i*3;
+                    cardStackList.get(i).verticalPos = (positionV*4+i)*3;
                     cardStackList.get(i).horizontalPos = positionH*3;
                 }
                 break;
+            case SpreadStackH:
+                for (int i = 0; i < 3; i++) {
+                    if (cardStackList.size() < i+1) break;
+                    cardStackList.get(cardStackList.size()-i-1).horizontalPos = (positionH*3)+i;
+                    cardStackList.get(cardStackList.size()-i-1).verticalPos = (positionV*3);
+                }
+                break;
+            default:
+                System.err.println("ERROR: updateStack() has defaulted! You so stupid!");
+                break;
         }
 
     }
 
-    public void drawStack(Canvas canvas) {
+    public void drawStackTop(Canvas canvas) {
+        if (getTopCard() == null) {
+            if (canFillEmpty) {
+                drawEmptyTop(canvas);
+            }
+            return;
+        }
         switch (stackType) {
             case StockStack:
-            case SpreadStackH:
             case StraightStack:
-                this.getTopCard().drawCard(canvas);
+                this.getTopCard().drawCardTop(canvas);
                 break;
             case SpreadStackV:
-                drawStackV(canvas);
+                drawStackVTop(canvas);
+                break;
+            case SpreadStackH:
+                drawStackHTop(canvas);
                 break;
         }
     }
 
-    private void drawStackV(Canvas canvas) {
+    private void drawStackVTop(Canvas canvas) {
         for (int i = 0; i < cardStackList.size(); i++) {
-            cardStackList.get(i).drawCard(canvas);
+            cardStackList.get(i).drawCardTop(canvas);
         }
     }
+
+    private void drawStackHTop(Canvas canvas) {
+        for (int i = 0; i < cardStackList.size(); i++) {
+            cardStackList.get(cardStackList.size()-i+1).drawCardTop(canvas);
+        }
+    }
+
+    public void drawEmptyTop(Canvas canvas) {
+        int[] pos = {emptyPosH,emptyPosV};
+        double[] canSize = {canvas.getWidth()/21.0, canvas.getWidth()/63.0, canvas.getWidth()/90.0, canvas.getWidth()/8.0};
+        //System.out.println(horizontalPos+" "+verticalPos);
+        Rect rectangle = new Rect(
+                (int)(pos[0]*canSize[0]+canSize[2]),
+                (int)(pos[1]*canSize[1]+canSize[2]),
+                (int)((pos[0]+3)*canSize[0]-canSize[2]),
+                (int)((pos[1]+3)*canSize[1]+canSize[3]));
+        emptyStack.setBounds(rectangle);
+        emptyStack.draw(canvas);
+    }
+
+    public void drawStackBottom(Canvas canvas) {
+        if (getTopCard() == null) {
+            if (canFillEmpty) {
+                drawEmptyTop(canvas);
+            }
+            return;
+        }
+        switch (stackType) {
+            case StockStack:
+            case StraightStack:
+                this.getTopCard().drawCardBottom(canvas);
+                break;
+            case SpreadStackV:
+                drawStackVBottom(canvas);
+                break;
+            case SpreadStackH:
+                drawStackHBottom(canvas);
+                break;
+        }
+    }
+
+    private void drawStackVBottom(Canvas canvas) {
+        for (int i = 0; i < cardStackList.size(); i++) {
+            cardStackList.get(i).drawCardBottom(canvas);
+        }
+    }
+    private void drawStackHBottom(Canvas canvas) {
+        for (int i = 0; i < 3; i++) {
+            cardStackList.get(cardStackList.size()-i+1).drawCardBottom(canvas);
+        }
+    }
+
+    public void drawEmptyBottom(Canvas canvas) {
+        int[] pos = {emptyPosH,emptyPosV};
+        double[] canSize = {canvas.getWidth()/21.0, canvas.getWidth()/63.0, canvas.getWidth()/90.0, canvas.getWidth()/8.0};
+        //System.out.println(horizontalPos+" "+verticalPos);
+        Rect rectangle = new Rect(
+                (int)(pos[0]*canSize[0]+canSize[2]),
+                (int)(canvas.getHeight()-((pos[1]+3)*canSize[1]+canSize[3])),
+                (int)((pos[0]+3)*canSize[0]-canSize[2]),
+                (int)(canvas.getHeight()-(pos[1]*canSize[1]+canSize[2])));
+        emptyStack.setBounds(rectangle);
+        emptyStack.draw(canvas);
+    }
+
     public static void setIgnoreRules(boolean ignoreRule) {
         ignoreRules = ignoreRule;
     }

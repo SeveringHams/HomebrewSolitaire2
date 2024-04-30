@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.view.MotionEvent;
 
 import com.severinghams.homebrewsolitaire.R;
 import com.severinghams.homebrewsolitaire.core.enums.*;
@@ -22,12 +24,21 @@ public class BaseSingleDeckGameObject {
                     {R.drawable.card_h1,R.drawable.card_h2,R.drawable.card_h3,R.drawable.card_h4,R.drawable.card_h5,R.drawable.card_h6,R.drawable.card_h7,R.drawable.card_h8,R.drawable.card_h9,R.drawable.card_h10,R.drawable.card_h11,R.drawable.card_h12,R.drawable.card_h13}
             };
     public final int cardBack = R.drawable.card_back;
+    public final int emptySpot = R.drawable.empty_stack;
+    public final int background = R.drawable.background0;
+    public int canvasHeight = 1;
+    public int canvasWidth = 1;
     public final ArrayList<CardObject> dealer;
-    public ArrayList<CardObject> hand = new ArrayList<>(1);
+    public final ArrayList<CardObject> hand = new ArrayList<>(1);
     private boolean ignoreRules = false;
     public int[] handPosition = {0,0};
+    public final Drawable emptySpotDrawable;
+    public final Drawable backgroundDrawable;
+    @SuppressLint("UseCompatLoadingForDrawables")
     public BaseSingleDeckGameObject(long seed, Context context) {
         this.dealer = randomizer(seed, context);
+        emptySpotDrawable = context.getDrawable(emptySpot);
+        backgroundDrawable = context.getDrawable(background);
     }
     @SuppressLint("UseCompatLoadingForDrawables")
     public ArrayList<CardObject> randomizer(long seed, Context context) {
@@ -62,10 +73,17 @@ public class BaseSingleDeckGameObject {
 
     public ArrayList<CardObject> setFromHand() {
         ArrayList<CardObject> toStack = hand;
-        hand = new ArrayList<>(1);
+        hand.clear();
         return toStack;
     }
-    public void drawGame(Canvas canvas) {
 
+    public void doTouchEvent(MotionEvent motion) {
+
+    }
+    public void drawGame(Canvas canvas) {
+        this.canvasWidth = canvas.getWidth();
+        this.canvasHeight = canvas.getHeight();
+        backgroundDrawable.setBounds(0,0,canvas.getWidth()-1,canvas.getHeight());
+        backgroundDrawable.draw(canvas);
     }
 }
