@@ -27,7 +27,7 @@ import com.severinghams.homebrewsolitaire.core.KlondikeGameObject;
 import java.lang.reflect.Field;
 
 /**
- * TODO: document your custom view class.
+ * The game board view.
  */
 public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -66,7 +66,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
-        //gameObject.updateGame();
+        gameObject.updateGame();
     }
 
     private void init(AttributeSet attrs, int defStyle) {
