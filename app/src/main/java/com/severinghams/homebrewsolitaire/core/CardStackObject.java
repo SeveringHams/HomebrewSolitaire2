@@ -93,11 +93,6 @@ public class CardStackObject {
         updateStack();
     }
     private void init() {
-        if (stackType.equals(EnumStackType.StockStack)) {
-            for (int i = 0; i < cardStackList.size(); i++) {
-                cardStackList.get(i).isFaceDown = true;
-            }
-        }
         switch (stackType) {
             case StockStack:
             case SpreadStackH:

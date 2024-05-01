@@ -1,6 +1,7 @@
 package com.severinghams.homebrewsolitaire;
 
 import android.graphics.Canvas;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 
 public class MainThread extends Thread {
@@ -20,14 +21,15 @@ public class MainThread extends Thread {
     public void run() {
         while (running) {
             canvas = null;
-
             try {
                 canvas = this.surfaceHolder.lockCanvas();
                 synchronized(surfaceHolder) {
                     this.boardView.update();
                     this.boardView.draw(canvas);
                 }
-            } catch (Exception ignored) {} finally {
+            } catch (Exception e) {
+                System.out.println("CATCH");
+            } finally {
                 if (canvas != null) {
                     try {
                         surfaceHolder.unlockCanvasAndPost(canvas);
@@ -36,7 +38,9 @@ public class MainThread extends Thread {
                     }
                 }
             }
+
         }
+
     }
 
 }

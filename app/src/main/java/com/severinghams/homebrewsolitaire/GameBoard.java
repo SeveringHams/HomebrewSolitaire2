@@ -1,5 +1,6 @@
 package com.severinghams.homebrewsolitaire;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -9,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -21,6 +23,8 @@ import androidx.annotation.NonNull;
 import com.severinghams.homebrewsolitaire.R;
 import com.severinghams.homebrewsolitaire.core.BaseSingleDeckGameObject;
 import com.severinghams.homebrewsolitaire.core.KlondikeGameObject;
+
+import java.lang.reflect.Field;
 
 /**
  * TODO: document your custom view class.
@@ -38,35 +42,31 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
     public GameBoard(Context context) {
         super(context);
         init(null, 0);
+        getHolder().addCallback(this);
         thread = new MainThread(getHolder(), this);
         setFocusable(true);
         gameObject = new KlondikeGameObject(0, context);
-        getHolder().addCallback(this);
-        this.requestFocusFromTouch();
     }
-
     public GameBoard(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(attrs, 0);
+        getHolder().addCallback(this);
         thread = new MainThread(getHolder(), this);
         setFocusable(true);
         gameObject = new KlondikeGameObject(0, context);
-        getHolder().addCallback(this);
-        this.requestFocusFromTouch();
     }
 
     public GameBoard(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(attrs, defStyle);
+        getHolder().addCallback(this);
         thread = new MainThread(getHolder(), this);
         setFocusable(true);
         gameObject = new KlondikeGameObject(0, context);
-        getHolder().addCallback(this);
-        this.requestFocusFromTouch();
     }
 
     public void update() {
-
+        //gameObject.updateGame();
     }
 
     private void init(AttributeSet attrs, int defStyle) {
@@ -78,13 +78,12 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
         );
-
     }
 
     public boolean onTouchEvent(MotionEvent motion) {
-        System.out.println(motion.getX()+" "+motion.getY()+" "+motion.getX());
-        performClick();
+        //System.out.println(motion.getX()+" "+motion.getY()+" "+motion.toString());
         gameObject.doTouchEvent(motion);
+        performClick();
         return true;
     }
 
@@ -92,16 +91,20 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
         super.performClick();
         return true;
     }
-
+    /*
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+        System.out.println("onDraw "+System.nanoTime());
         gameObject.drawGame(canvas);
-
+        super.onDraw(canvas);
     }
-
+    */
+    @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
+        if (canvas != null) {
+            gameObject.drawGame(canvas);
+        }
     }
 
     @Override
@@ -112,7 +115,6 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
-
     }
 
     @Override
