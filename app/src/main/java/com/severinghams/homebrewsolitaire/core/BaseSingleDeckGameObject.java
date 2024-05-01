@@ -4,12 +4,17 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.view.ActionMode;
 import android.view.MotionEvent;
+
+import androidx.core.view.ActionProvider;
 
 import com.severinghams.homebrewsolitaire.R;
 import com.severinghams.homebrewsolitaire.core.enums.*;
 
+import java.lang.annotation.Inherited;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -34,9 +39,13 @@ public class BaseSingleDeckGameObject {
     public int[] handPosition = {0,0};
     public final Drawable emptySpotDrawable;
     public final Drawable backgroundDrawable;
+    public float cursorX = 100;
+    public float cursorY = 500;
+    public Paint paint = new Paint();
     @SuppressLint("UseCompatLoadingForDrawables")
     public BaseSingleDeckGameObject(long seed, Context context) {
         this.dealer = randomizer(seed, context);
+        paint.setARGB(255,255,255,255);
         emptySpotDrawable = context.getDrawable(emptySpot);
         backgroundDrawable = context.getDrawable(background);
     }
@@ -76,14 +85,44 @@ public class BaseSingleDeckGameObject {
         hand.clear();
         return toStack;
     }
-
     public void doTouchEvent(MotionEvent motion) {
-
+        String action = "";
+        switch (motion.getAction()) {
+            case 0:
+                action = "ACTION_DOWN";
+                break;
+            case 1:
+                action = "ACTION_UP";
+                break;
+            case 2:
+                action = "ACTION_MOVE";
+                break;
+            default:
+                action = Integer.toString(motion.getAction());
+        }
+        System.out.format("%s%4d%s%4d%s%13s%s%n",
+                "| X = ",
+                (int)motion.getX(),
+                //(int)Math.floor(motion.getX()*7.0/canvasWidth),
+                " | Y = ",
+                (int)motion.getY(),
+                //(int)Math.floor(motion.getY()*9.0/canvasWidth),
+                " | ACTION = ",
+                action,
+                " |");
+        cursorX = motion.getX();
+        cursorY = motion.getY();
     }
     public void drawGame(Canvas canvas) {
         this.canvasWidth = canvas.getWidth();
         this.canvasHeight = canvas.getHeight();
-        backgroundDrawable.setBounds(0,0,canvas.getWidth()-1,canvas.getHeight());
+        backgroundDrawable.setBounds(0,0,canvas.getWidth(),canvas.getHeight());
         backgroundDrawable.draw(canvas);
+        System.out.println(cursorX+ "  " +cursorY);
+        canvas.drawRect(cursorX-10,cursorY-10,cursorX+10,cursorY+10, paint);
+    }
+
+    public void updateGame() {
+
     }
 }

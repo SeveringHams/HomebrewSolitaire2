@@ -77,32 +77,43 @@ public class KlondikeGameObject extends BaseSingleDeckGameObject {
         // add to stock
         for (int i = 0; i < dealer.size(); i++) {
             stock.setupAddCard(dealer.get(0));
+            stock.cardStackList.get(i).isFaceDown = true;
             dealer.remove(0);
         }
     }
 
     private void drawTableau(Canvas canvas) {
         for (int i = 0; i < tableau.length; i++) {
-            tableau[i].updateStack();
             tableau[i].drawStackTop(canvas);
         }
     }
     private void drawFoundation(Canvas canvas) {
         for (int i = 0; i < foundation.length; i++) {
-            foundation[i].updateStack();
             foundation[i].drawStackTop(canvas);
         }
     }
     private void drawStockAndWaste(Canvas canvas) {
-        stock.updateStack();
         stock.drawStackTop(canvas);
-        waste.updateStack();
         waste.drawStackTop(canvas);
     }
+    @Override
     public void drawGame(Canvas canvas) {
         super.drawGame(canvas);
         drawFoundation(canvas);
         drawTableau(canvas);
         drawStockAndWaste(canvas);
+    }
+
+    @Override
+    public void updateGame() {
+        super.updateGame();
+        for (int i = 0; i < tableau.length; i++) {
+            tableau[i].updateStack();
+        }
+        for (int i = 0; i < foundation.length; i++) {
+            foundation[i].updateStack();
+        }
+        stock.updateStack();
+        waste.updateStack();
     }
 }
