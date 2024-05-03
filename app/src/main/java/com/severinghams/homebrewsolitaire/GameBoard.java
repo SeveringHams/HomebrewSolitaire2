@@ -1,38 +1,43 @@
 package com.severinghams.homebrewsolitaire;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.opengl.GLSurfaceView;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
+import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
+import android.view.Surface;
 import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 
 import androidx.annotation.NonNull;
 
+import com.severinghams.homebrewsolitaire.R;
 import com.severinghams.homebrewsolitaire.core.BaseSingleDeckGameObject;
 import com.severinghams.homebrewsolitaire.core.KlondikeGameObject;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
+import java.lang.reflect.Field;
 
 /**
  * The game board view.
  */
-public class GameBoard extends GLSurfaceView implements SurfaceHolder.Callback2, GLSurfaceView.Renderer {
-    private final GameRenderer renderer;
+public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
+
     BaseSingleDeckGameObject gameObject;
     private final MainThread thread;
     public GameBoard(Context context) {
         super(context);
         init(null, 0);
         getHolder().addCallback(this);
-        // Create an OpenGL ES 2.0 context
-        setEGLContextClientVersion(2);
-        renderer = new GameRenderer();
-        // Set the Renderer for drawing on the GLSurfaceView
-        setRenderer(renderer);
         thread = new MainThread(getHolder(), this);
         setFocusable(true);
         gameObject = new KlondikeGameObject(0, context);
@@ -42,11 +47,16 @@ public class GameBoard extends GLSurfaceView implements SurfaceHolder.Callback2,
         super(context, attrs);
         init(attrs, 0);
         getHolder().addCallback(this);
-        // Create an OpenGL ES 2.0 context
-        setEGLContextClientVersion(2);
-        renderer = new GameRenderer();
-        // Set the Renderer for drawing on the GLSurfaceView
-        setRenderer(renderer);
+        thread = new MainThread(getHolder(), this);
+        setFocusable(true);
+        gameObject = new KlondikeGameObject(0, context);
+        gameObject.updateGame();
+    }
+
+    public GameBoard(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        init(attrs, defStyle);
+        getHolder().addCallback(this);
         thread = new MainThread(getHolder(), this);
         setFocusable(true);
         gameObject = new KlondikeGameObject(0, context);
@@ -86,6 +96,17 @@ public class GameBoard extends GLSurfaceView implements SurfaceHolder.Callback2,
     }
 
     @Override
+    public void surfaceCreated(@NonNull SurfaceHolder holder) {
+        thread.setRunning(true);
+        thread.start();
+    }
+
+    @Override
+    public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
+        gameObject.onSetSize(width, height);
+    }
+
+    @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
         boolean retry = true;
         while (retry) {
@@ -98,21 +119,4 @@ public class GameBoard extends GLSurfaceView implements SurfaceHolder.Callback2,
             retry = false;
         }
     }
-
-    @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        thread.setRunning(true);
-        thread.start();
-    }
-
-    @Override
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
-        gameObject.onSetSize(width, height);
-    }
-
-    @Override
-    public void onDrawFrame(GL10 gl) {
-
-    }
-
 }
