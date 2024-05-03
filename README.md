@@ -1,13 +1,15 @@
-# Homebrew Solitaire
+# Homebrew Solitaire (Android 5+)
 
 Homebrew Solitaire is a free, open-source, ad-free, highly customizable solitaire app for Android. 
+
+This is built on older dependencies. For the version built on newer dependencies, see [Homebrew Solitaire (Android 11+)](https://github.com/SeveringHams/HomebrewSolitaire)
 
 
 ## Features
 
 Nothing has been tested as of yet, the frontend of the application needs to interface with the backend first.
 Most of the backend code has already been written.
-See [Planned Features](https://github.com/SeveringHams/HomebrewSolitaire/blob/master/README.md#planned-features)
+See [Planned Features](https://github.com/SeveringHams/HomebrewSolitaire2/blob/master/README.md#planned-features)
 
 
 ## Planned Features
