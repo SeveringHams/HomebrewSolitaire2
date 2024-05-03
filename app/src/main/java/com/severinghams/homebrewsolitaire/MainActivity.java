@@ -29,11 +29,17 @@ import com.severinghams.homebrewsolitaire.core.KlondikeGameObject;
 public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle bundle) {
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                .build());
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                //.penaltyDeath()
+                .build());
         super.onCreate(bundle);
         this.setContentView(R.layout.game_screen);
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder(StrictMode.getVmPolicy())
-                .detectLeakedClosableObjects()
-                .build());
     }
 
     @Override

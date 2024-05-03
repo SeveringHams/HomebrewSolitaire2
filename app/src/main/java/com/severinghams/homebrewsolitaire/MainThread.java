@@ -13,6 +13,7 @@ public class MainThread extends Thread {
         super();
         this.surfaceHolder = surfaceHolder;
         this.boardView = boardView;
+        this.setPriority(10);
     }
     public void setRunning(boolean isRunning) {
         running = isRunning;

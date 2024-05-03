@@ -1,6 +1,7 @@
 package com.severinghams.homebrewsolitaire.core;
 
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -16,7 +17,7 @@ public class CardObject {
     public final EnumColour colour;
     public int verticalPos;
     public int horizontalPos;
-
+    private final Rect rect = new Rect();
     public final Drawable drawable;
     public final Drawable drawableBack;
     public CardObject (EnumRank rank, EnumSuit suit, Drawable drawFace, Drawable drawBack) {
@@ -27,7 +28,7 @@ public class CardObject {
         drawableBack = drawBack;
     }
     public void drawCardTop(Canvas canvas, Rect cardTemp, double offsetH, double offsetV) {
-        Rect rect = new Rect(cardTemp);
+        rect.set(cardTemp);
         rect.offset((int)(offsetH*(double)horizontalPos),(int)(offsetV*(double)verticalPos));
         if (isFaceDown) {
             drawableBack.setBounds(rect);

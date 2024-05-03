@@ -47,9 +47,9 @@ public class BaseSingleDeckGameObject {
     public int[] handPosition = {0,0};
     public final Drawable emptySpotDrawable;
     public final Drawable backgroundDrawable;
-    public float cursorX = 100;
-    public float cursorY = 500;
-    public Paint paint = new Paint();
+    public static float cursorX = 100;
+    public static float cursorY = 500;
+    public static Paint paint = new Paint();
 
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -114,7 +114,7 @@ public class BaseSingleDeckGameObject {
                 "| X = ",
                 (int)Math.floor(motion.getX()*7.0/canvasWidth),
                 " | Y = ",
-                (int)Math.floor(motion.getY()*9.0/canvasWidth),
+                (int)Math.floor(motion.getY()*7.0/1.4057/canvasWidth),
                 " | ACTION = ",
                 action,
                 " |");
@@ -124,7 +124,6 @@ public class BaseSingleDeckGameObject {
     public void drawGame(Canvas canvas) {
         backgroundDrawable.setBounds(0,0,canvas.getWidth(),canvas.getHeight());
         backgroundDrawable.draw(canvas);
-        System.out.println(cursorX+ "  " +cursorY);
         canvas.drawRect(cursorX-10,cursorY-10,cursorX+10,cursorY+10, paint);
     }
 
@@ -147,5 +146,6 @@ public class BaseSingleDeckGameObject {
                 (int)(margin + cardWidth),
                 (int)(margin + cardHeight)
         );
+        System.out.println(fCardHeight/cardPositionOffset);
     }
 }

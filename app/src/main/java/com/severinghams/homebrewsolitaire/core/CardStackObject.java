@@ -29,6 +29,7 @@ public class CardStackObject {
     private final int positionV;
     private int emptyPosH;
     private int emptyPosV;
+    private final Rect rect = new Rect();
     private final Drawable emptyStack;
 
     // specify position, base rank, rank pattern, suit stacking, and rank rollover. use this to create a tableau stack, waste stack, or foundation stack.
@@ -237,7 +238,7 @@ public class CardStackObject {
     }
 
     public void drawStackTop(Canvas canvas, Rect cardTemp, double offsetH, double offsetV, double fCardHeight) {
-        Rect rect = new Rect(cardTemp);
+        rect.set(cardTemp);
         rect.offset((int)(offsetH*(double)positionH),(int)(fCardHeight*(double)positionV));
         if (getTopCard() == null) {
             if (canFillEmpty) {
