@@ -8,7 +8,7 @@ This is built on older dependencies for compatibility. For the version built on 
 ## Features
 
 Nothing has been tested as of yet, the frontend of the application needs to interface with the backend first.
-Most of the backend code has already been written.
+Most of the base game code has already been written.
 See [Planned Features](https://github.com/SeveringHams/HomebrewSolitaire2/blob/master/README.md#planned-features)
 
 
