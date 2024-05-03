@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.view.ActionMode;
 import android.view.MotionEvent;
@@ -30,11 +31,18 @@ public class BaseSingleDeckGameObject {
             };
     public final int cardBack = R.drawable.card_back;
     public final int emptySpot = R.drawable.empty_stack;
-    public final int background = R.drawable.background0;
-    public int canvasHeight = 1;
-    public int canvasWidth = 1;
+    public static final int background = R.drawable.background0;
+    public int canvasWidth;
+    public int canvasHeight;
+    public double cardWidth;
+    public double cardHeight;
+    public double cardPositionOffset;
+    public double cardStackOffset;
+    public double margin;
+    public double fCardHeight;
     public final ArrayList<CardObject> dealer;
     public final ArrayList<CardObject> hand = new ArrayList<>(1);
+    public final Rect cardTemp = new Rect();
     private boolean ignoreRules = false;
     public int[] handPosition = {0,0};
     public final Drawable emptySpotDrawable;
@@ -42,6 +50,8 @@ public class BaseSingleDeckGameObject {
     public float cursorX = 100;
     public float cursorY = 500;
     public Paint paint = new Paint();
+
+
     @SuppressLint("UseCompatLoadingForDrawables")
     public BaseSingleDeckGameObject(long seed, Context context) {
         this.dealer = randomizer(seed, context);
@@ -55,7 +65,6 @@ public class BaseSingleDeckGameObject {
         EnumSuit[] arraySuit = {EnumSuit.Spades,EnumSuit.Clubs,EnumSuit.Hearts,EnumSuit.Diamonds};
         ArrayList<CardObject> cards = new ArrayList<>(52);
         for (int i = 0; i < 52; i++) {
-
             //long constructor so I cut it up a bit.
             cards.add
             (
@@ -99,14 +108,13 @@ public class BaseSingleDeckGameObject {
                 break;
             default:
                 action = Integer.toString(motion.getAction());
+                break;
         }
         System.out.format("%s%4d%s%4d%s%13s%s%n",
                 "| X = ",
-                (int)motion.getX(),
-                //(int)Math.floor(motion.getX()*7.0/canvasWidth),
+                (int)Math.floor(motion.getX()*7.0/canvasWidth),
                 " | Y = ",
-                (int)motion.getY(),
-                //(int)Math.floor(motion.getY()*9.0/canvasWidth),
+                (int)Math.floor(motion.getY()*9.0/canvasWidth),
                 " | ACTION = ",
                 action,
                 " |");
@@ -114,8 +122,6 @@ public class BaseSingleDeckGameObject {
         cursorY = motion.getY();
     }
     public void drawGame(Canvas canvas) {
-        this.canvasWidth = canvas.getWidth();
-        this.canvasHeight = canvas.getHeight();
         backgroundDrawable.setBounds(0,0,canvas.getWidth(),canvas.getHeight());
         backgroundDrawable.draw(canvas);
         System.out.println(cursorX+ "  " +cursorY);
@@ -124,5 +130,22 @@ public class BaseSingleDeckGameObject {
 
     public void updateGame() {
 
+    }
+
+    public void onSetSize(int width, int height) {
+        canvasWidth = width;
+        canvasHeight = height;
+        cardWidth = canvasWidth/7.0-canvasWidth/90.0;
+        cardHeight = cardWidth*1.44;
+        margin = canvasWidth/(90.0*2);
+        cardPositionOffset = canvasWidth/7.0;
+        cardStackOffset = cardWidth*0.44;
+        fCardHeight = cardHeight + margin*2;
+        cardTemp.set(
+                (int)(margin),
+                (int)(margin),
+                (int)(margin + cardWidth),
+                (int)(margin + cardHeight)
+        );
     }
 }

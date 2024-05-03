@@ -26,6 +26,7 @@ public class MainThread extends Thread {
                 synchronized(surfaceHolder) {
                     this.boardView.update();
                     this.boardView.draw(canvas);
+                    this.boardView.invalidate();
                 }
             } catch (Exception e) {
                 System.out.println("CATCH");

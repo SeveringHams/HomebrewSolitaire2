@@ -212,21 +212,21 @@ public class CardStackObject {
             case StockStack:
             case StraightStack:
                 for (int i = 0; i < cardStackList.size(); i++) {
-                    cardStackList.get(i).verticalPos = positionV*3;
-                    cardStackList.get(i).horizontalPos = positionH*3;
+                    cardStackList.get(i).verticalPos = 0;
+                    cardStackList.get(i).horizontalPos = 0;
                 }
                 break;
             case SpreadStackV:
                 for (int i = 0; i < cardStackList.size(); i++) {
-                    cardStackList.get(i).verticalPos = (positionV*4+i)*3;
-                    cardStackList.get(i).horizontalPos = positionH*3;
+                    cardStackList.get(i).verticalPos = i;
+                    cardStackList.get(i).horizontalPos = 0;
                 }
                 break;
             case SpreadStackH:
                 for (int i = 0; i < 3; i++) {
                     if (cardStackList.size() < i+1) break;
-                    cardStackList.get(cardStackList.size()-i-1).horizontalPos = (positionH*3)+i;
-                    cardStackList.get(cardStackList.size()-i-1).verticalPos = (positionV*3);
+                    cardStackList.get(cardStackList.size()-i-1).horizontalPos = i;
+                    cardStackList.get(cardStackList.size()-i-1).verticalPos = 0;
                 }
                 break;
             default:
@@ -236,94 +236,83 @@ public class CardStackObject {
 
     }
 
-    public void drawStackTop(Canvas canvas) {
+    public void drawStackTop(Canvas canvas, Rect cardTemp, double offsetH, double offsetV, double fCardHeight) {
+        Rect rect = new Rect(cardTemp);
+        rect.offset((int)(offsetH*(double)positionH),(int)(fCardHeight*(double)positionV));
         if (getTopCard() == null) {
             if (canFillEmpty) {
-                drawEmptyTop(canvas);
+                drawEmptyTop(canvas, rect, offsetH, offsetV);
             }
             return;
         }
         switch (stackType) {
             case StockStack:
             case StraightStack:
-                this.getTopCard().drawCardTop(canvas);
+                this.getTopCard().drawCardTop(canvas, rect, offsetH, offsetV);
                 break;
             case SpreadStackV:
-                drawStackVTop(canvas);
+                drawStackVTop(canvas, rect, offsetH, offsetV);
                 break;
             case SpreadStackH:
-                drawStackHTop(canvas);
+                drawStackHTop(canvas, rect, offsetH, offsetV);
                 break;
         }
     }
 
-    private void drawStackVTop(Canvas canvas) {
+    private void drawStackVTop(Canvas canvas, Rect cardTemp, double offsetH, double offsetV) {
         for (int i = 0; i < cardStackList.size(); i++) {
-            cardStackList.get(i).drawCardTop(canvas);
+            cardStackList.get(i).drawCardTop(canvas, cardTemp, offsetH, offsetV);
         }
     }
 
-    private void drawStackHTop(Canvas canvas) {
+    private void drawStackHTop(Canvas canvas, Rect cardTemp, double offsetH, double offsetV) {
         for (int i = 0; i < cardStackList.size(); i++) {
-            cardStackList.get(cardStackList.size()-i+1).drawCardTop(canvas);
+            cardStackList.get(cardStackList.size()-i+1).drawCardTop(canvas, cardTemp, offsetH, offsetV);
         }
     }
 
-    public void drawEmptyTop(Canvas canvas) {
-        int[] pos = {emptyPosH,emptyPosV};
-        double[] canSize = {canvas.getWidth()/21.0, canvas.getWidth()/63.0, canvas.getWidth()/90.0, canvas.getWidth()/8.0};
-        //System.out.println(horizontalPos+" "+verticalPos);
-        Rect rectangle = new Rect(
-                (int)(pos[0]*canSize[0]+canSize[2]),
-                (int)(pos[1]*canSize[1]+canSize[2]),
-                (int)((pos[0]+3)*canSize[0]-canSize[2]),
-                (int)((pos[1]+3)*canSize[1]+canSize[3]));
-        emptyStack.setBounds(rectangle);
+    public void drawEmptyTop(Canvas canvas, Rect cardTemp, double offsetH, double offsetV) {
+        Rect rect = new Rect(cardTemp);
+        rect.offset((int)(offsetH*(double)emptyPosH),(int)(offsetV*(double)emptyPosV));
+        emptyStack.setBounds(cardTemp);
         emptyStack.draw(canvas);
     }
 
-    public void drawStackBottom(Canvas canvas) {
+    public void drawStackBottom(Canvas canvas, Rect cardTemp, double offsetH, double offsetV) {
         if (getTopCard() == null) {
             if (canFillEmpty) {
-                drawEmptyTop(canvas);
+                drawEmptyTop(canvas, cardTemp, offsetH, offsetV);
             }
             return;
         }
         switch (stackType) {
             case StockStack:
             case StraightStack:
-                this.getTopCard().drawCardBottom(canvas);
+                this.getTopCard().drawCardBottom(canvas, cardTemp, offsetH, offsetV);
                 break;
             case SpreadStackV:
-                drawStackVBottom(canvas);
+                drawStackVBottom(canvas, cardTemp, offsetH, offsetV);
                 break;
             case SpreadStackH:
-                drawStackHBottom(canvas);
+                drawStackHBottom(canvas, cardTemp, offsetH, offsetV);
                 break;
         }
     }
 
-    private void drawStackVBottom(Canvas canvas) {
+    private void drawStackVBottom(Canvas canvas, Rect cardTemp, double offsetH, double offsetV) {
         for (int i = 0; i < cardStackList.size(); i++) {
-            cardStackList.get(i).drawCardBottom(canvas);
+            cardStackList.get(i).drawCardBottom(canvas, cardTemp, offsetH, offsetV);
         }
     }
-    private void drawStackHBottom(Canvas canvas) {
+    private void drawStackHBottom(Canvas canvas, Rect cardTemp, double offsetH, double offsetV) {
         for (int i = 0; i < 3; i++) {
-            cardStackList.get(cardStackList.size()-i+1).drawCardBottom(canvas);
+            cardStackList.get(cardStackList.size()-i+1).drawCardBottom(canvas, cardTemp, offsetH, offsetV);
         }
     }
 
-    public void drawEmptyBottom(Canvas canvas) {
-        int[] pos = {emptyPosH,emptyPosV};
-        double[] canSize = {canvas.getWidth()/21.0, canvas.getWidth()/63.0, canvas.getWidth()/90.0, canvas.getWidth()/8.0};
-        //System.out.println(horizontalPos+" "+verticalPos);
-        Rect rectangle = new Rect(
-                (int)(pos[0]*canSize[0]+canSize[2]),
-                (int)(canvas.getHeight()-((pos[1]+3)*canSize[1]+canSize[3])),
-                (int)((pos[0]+3)*canSize[0]-canSize[2]),
-                (int)(canvas.getHeight()-(pos[1]*canSize[1]+canSize[2])));
-        emptyStack.setBounds(rectangle);
+    public void drawEmptyBottom(Canvas canvas, Rect cardTemp, double offsetH, double offsetV) {
+        cardTemp.offset((int)(offsetH*(double)emptyPosH),(int)(offsetV*(double)emptyPosV));
+        emptyStack.setBounds(cardTemp);
         emptyStack.draw(canvas);
     }
 

@@ -17,7 +17,6 @@ public class CardObject {
     public int verticalPos;
     public int horizontalPos;
 
-
     public final Drawable drawable;
     public final Drawable drawableBack;
     public CardObject (EnumRank rank, EnumSuit suit, Drawable drawFace, Drawable drawBack) {
@@ -27,42 +26,25 @@ public class CardObject {
         drawable = drawFace;
         drawableBack = drawBack;
     }
-
-    public void drawCardTop(Canvas canvas) {
-        int[] pos = {horizontalPos,verticalPos};
-        double[] canSize = {canvas.getWidth()/21.0, canvas.getWidth()/63.0, canvas.getWidth()/90.0, canvas.getWidth()/8.0};
-        //System.out.println(horizontalPos+" "+verticalPos);
-        Rect rectangle = new Rect(
-                (int)(pos[0]*canSize[0]+canSize[2]),
-                (int)(pos[1]*canSize[1]+canSize[2]),
-                (int)((pos[0]+3)*canSize[0]-canSize[2]),
-                (int)((pos[1]+3)*canSize[1]+canSize[3]));
-
+    public void drawCardTop(Canvas canvas, Rect cardTemp, double offsetH, double offsetV) {
+        Rect rect = new Rect(cardTemp);
+        rect.offset((int)(offsetH*(double)horizontalPos),(int)(offsetV*(double)verticalPos));
         if (isFaceDown) {
-            drawableBack.setBounds(rectangle);
+            drawableBack.setBounds(rect);
             drawableBack.draw(canvas);
         } else {
-            drawable.setBounds(rectangle);
+            drawable.setBounds(rect);
             drawable.draw(canvas);
         }
     }
 
 
-    public void drawCardBottom(Canvas canvas) {
-        int[] pos = {horizontalPos,verticalPos};
-        double[] canSize = {canvas.getWidth()/21.0, canvas.getWidth()/63.0, canvas.getWidth()/90.0, canvas.getWidth()/8.0};
-        //System.out.println(horizontalPos+" "+verticalPos);
-        Rect rectangle = new Rect(
-                (int)(pos[0]*canSize[0]+canSize[2]),
-                (int)(canvas.getHeight()-((pos[1]+3)*canSize[1]+canSize[3])),
-                (int)((pos[0]+3)*canSize[0]-canSize[2]),
-                (int)(canvas.getHeight()-(pos[1]*canSize[1]+canSize[2])));
-
+    public void drawCardBottom(Canvas canvas, Rect cardTemp, double offsetH, double offsetV) {
         if (isFaceDown) {
-            drawableBack.setBounds(rectangle);
+            drawableBack.setBounds(cardTemp);
             drawableBack.draw(canvas);
         } else {
-            drawable.setBounds(rectangle);
+            drawable.setBounds(cardTemp);
             drawable.draw(canvas);
         }
     }

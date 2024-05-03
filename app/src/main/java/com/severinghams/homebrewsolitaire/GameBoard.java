@@ -31,12 +31,6 @@ import java.lang.reflect.Field;
  */
 public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
-    int paddingLeft = getPaddingLeft();
-    int paddingTop = getPaddingTop();
-    int paddingRight = getPaddingRight();
-    int paddingBottom = getPaddingBottom();
-    int contentWidth = getWidth() - paddingLeft - paddingRight;
-    int contentHeight = getHeight() - paddingTop - paddingBottom;
     BaseSingleDeckGameObject gameObject;
     private final MainThread thread;
     public GameBoard(Context context) {
@@ -46,6 +40,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
         thread = new MainThread(getHolder(), this);
         setFocusable(true);
         gameObject = new KlondikeGameObject(0, context);
+        gameObject.updateGame();
     }
     public GameBoard(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -54,6 +49,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
         thread = new MainThread(getHolder(), this);
         setFocusable(true);
         gameObject = new KlondikeGameObject(0, context);
+        gameObject.updateGame();
     }
 
     public GameBoard(Context context, AttributeSet attrs, int defStyle) {
@@ -63,10 +59,11 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
         thread = new MainThread(getHolder(), this);
         setFocusable(true);
         gameObject = new KlondikeGameObject(0, context);
+        gameObject.updateGame();
     }
 
     public void update() {
-        gameObject.updateGame();
+        //gameObject.updateGame();
     }
 
     private void init(AttributeSet attrs, int defStyle) {
@@ -91,20 +88,10 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
         super.performClick();
         return true;
     }
-    /*
-    @Override
-    protected void onDraw(Canvas canvas) {
-        System.out.println("onDraw "+System.nanoTime());
-        gameObject.drawGame(canvas);
-        super.onDraw(canvas);
-    }
-    */
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        if (canvas != null) {
-            gameObject.drawGame(canvas);
-        }
+        gameObject.drawGame(canvas);
     }
 
     @Override
@@ -115,6 +102,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
+        gameObject.onSetSize(width, height);
     }
 
     @Override

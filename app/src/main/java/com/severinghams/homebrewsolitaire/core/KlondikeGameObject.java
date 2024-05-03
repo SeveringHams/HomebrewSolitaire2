@@ -84,17 +84,17 @@ public class KlondikeGameObject extends BaseSingleDeckGameObject {
 
     private void drawTableau(Canvas canvas) {
         for (int i = 0; i < tableau.length; i++) {
-            tableau[i].drawStackTop(canvas);
+            tableau[i].drawStackTop(canvas, cardTemp, cardPositionOffset, cardStackOffset, fCardHeight);
         }
     }
     private void drawFoundation(Canvas canvas) {
         for (int i = 0; i < foundation.length; i++) {
-            foundation[i].drawStackTop(canvas);
+            foundation[i].drawStackTop(canvas, cardTemp, cardPositionOffset, cardStackOffset, fCardHeight);
         }
     }
     private void drawStockAndWaste(Canvas canvas) {
-        stock.drawStackTop(canvas);
-        waste.drawStackTop(canvas);
+        stock.drawStackTop(canvas, cardTemp, cardPositionOffset, cardStackOffset, fCardHeight);
+        waste.drawStackTop(canvas, cardTemp, cardPositionOffset, cardStackOffset, fCardHeight);
     }
     @Override
     public void drawGame(Canvas canvas) {
