@@ -20,7 +20,7 @@ See [Planned Features](https://github.com/SeveringHams/HomebrewSolitaire2/blob/m
 - Hundreds of versions of Solitaire
 - "Games Won" tally system
 - "Fastest solve" time system
-- 
+
 
 ## Authors
 
