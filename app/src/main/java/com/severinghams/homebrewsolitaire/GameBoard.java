@@ -82,7 +82,7 @@ public class GameBoard extends GLSurfaceView implements SurfaceHolder.Callback2,
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        gameObject.drawGame(canvas);
+        System.out.println("test?");
     }
 
     @Override
@@ -112,7 +112,7 @@ public class GameBoard extends GLSurfaceView implements SurfaceHolder.Callback2,
 
     @Override
     public void onDrawFrame(GL10 gl) {
-
+        gameObject.drawGame(gl);
     }
 
 }

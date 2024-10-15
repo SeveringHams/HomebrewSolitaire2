@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+import javax.microedition.khronos.opengles.GL10;
+
 public class BaseSingleDeckGameObject {
     public long gameSeed = 0;
     public final int[][] cardFaces =
@@ -125,6 +127,13 @@ public class BaseSingleDeckGameObject {
         backgroundDrawable.setBounds(0,0,canvas.getWidth(),canvas.getHeight());
         backgroundDrawable.draw(canvas);
         canvas.drawRect(cursorX-10,cursorY-10,cursorX+10,cursorY+10, paint);
+    }
+
+    public void drawGame(GL10 gl) {
+        //backgroundDrawable.setBounds(0,0,canvas.getWidth(),canvas.getHeight());
+        //backgroundDrawable.draw(canvas);
+        gl.
+        (cursorX-10,cursorY-10,cursorX+10,cursorY+10, paint);
     }
 
     public void updateGame() {
