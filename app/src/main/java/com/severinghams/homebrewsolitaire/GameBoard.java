@@ -108,6 +108,7 @@ public class GameBoard extends GLSurfaceView implements SurfaceHolder.Callback2,
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         gameObject.onSetSize(width, height);
+        gl.glViewport(width, height, width, height);
     }
 
     @Override

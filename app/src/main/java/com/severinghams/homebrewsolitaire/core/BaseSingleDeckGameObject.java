@@ -132,7 +132,6 @@ public class BaseSingleDeckGameObject {
     public void drawGame(GL10 gl) {
         //backgroundDrawable.setBounds(0,0,canvas.getWidth(),canvas.getHeight());
         //backgroundDrawable.draw(canvas);
-        gl.
         (cursorX-10,cursorY-10,cursorX+10,cursorY+10, paint);
     }
 
