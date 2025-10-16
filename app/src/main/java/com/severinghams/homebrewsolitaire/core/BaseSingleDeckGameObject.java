@@ -7,6 +7,14 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.opengl.GLES10;
+import android.opengl.GLES10Ext;
+import android.opengl.GLES11;
+import android.opengl.GLES11Ext;
+import android.opengl.GLES20;
+import android.opengl.GLES31;
+import android.opengl.GLES31Ext;
+import android.opengl.GLES32;
 import android.view.ActionMode;
 import android.view.MotionEvent;
 
@@ -20,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+import javax.microedition.khronos.opengles.GL;
 import javax.microedition.khronos.opengles.GL10;
 
 public class BaseSingleDeckGameObject {
@@ -132,7 +141,9 @@ public class BaseSingleDeckGameObject {
     public void drawGame(GL10 gl) {
         //backgroundDrawable.setBounds(0,0,canvas.getWidth(),canvas.getHeight());
         //backgroundDrawable.draw(canvas);
-        (cursorX-10,cursorY-10,cursorX+10,cursorY+10, paint);
+        //(cursorX-10,cursorY-10,cursorX+10,cursorY+10, paint);
+        gl.gl
+
     }
 
     public void updateGame() {

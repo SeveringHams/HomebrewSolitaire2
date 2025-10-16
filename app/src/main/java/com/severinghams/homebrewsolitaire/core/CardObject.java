@@ -27,6 +27,10 @@ public class CardObject {
         drawable = drawFace;
         drawableBack = drawBack;
     }
+
+    public int getTexIndex(boolean isTop) {
+        return (suit.value << 4) + rank.value + ((!isTop && (rank.value == 9 || rank.value == 10)) ? 5 : 0);
+    }
     public void drawCardTop(Canvas canvas, Rect cardTemp, double offsetH, double offsetV) {
         rect.set(cardTemp);
         rect.offset((int)(offsetH*(double)horizontalPos),(int)(offsetV*(double)verticalPos));
