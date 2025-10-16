@@ -29,7 +29,11 @@ public class CardObject {
     }
 
     public int getTexIndex(boolean isTop) {
-        return (suit.value << 4) + rank.value + ((!isTop && (rank.value == 9 || rank.value == 10)) ? 5 : 0);
+        if (this.isFaceDown) {
+            return 64;
+        }
+        int isTopInt = (!isTop && rank.hasAlt) ? 5 : 0;
+        return (suit.value << 4) + rank.value + isTopInt;
     }
     public void drawCardTop(Canvas canvas, Rect cardTemp, double offsetH, double offsetV) {
         rect.set(cardTemp);

@@ -148,7 +148,7 @@ public class CardStackObject {
             if (this.singleCardOnly) {
                 return false;
             } else {
-                if (this.rankStacking.isValid(getTopCard().rank,card.rank,rankRollover)&&this.suitStacking.isValid(getTopCard().suit,card.suit)) {
+                if (this.rankStacking.isValid(getTopCard().rank,card.rank,rankRollover) && this.suitStacking.isValid(getTopCard().suit,card.suit)) {
                     return true;
                 }
             }

@@ -17,11 +17,13 @@ public enum EnumRank {
 
     public final int value;
     public final String display;
+    public final boolean hasAlt;
     private static final EnumRank[] ranks = EnumRank.values();
 
-    EnumRank(int value, String display) {
+   EnumRank(int value, String display) {
         this.value = value;
         this.display = display;
+        this.hasAlt = (value == 9 || value == 10);
     }
 
     public EnumRank getRank(int rankNumber) {
